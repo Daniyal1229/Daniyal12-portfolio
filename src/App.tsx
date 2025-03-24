@@ -815,21 +815,6 @@ const FormGroup = styled.div`
   }
 `;
 
-const button = styled.button`
-  padding: 1rem 2rem;
-  background: #e94560;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: #d13354;
-  }
-`;
-
 const Footer = styled.footer`
   text-align: center;
   padding: 2rem;
