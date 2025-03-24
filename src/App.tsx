@@ -10,9 +10,9 @@ import styled from 'styled-components';
 // import profileImage from './assets/profile.jpg';
 
 // 3D Components
-import { Laptop } from './components/Laptop';
-import { SkillsSphere } from './components/SkillsSphere';
-import { ProjectCards } from './components/ProjectCards';
+import { Laptop } from './components/Laptop.tsx';
+import { SkillsSphere } from './components/SkillsSphere.tsx';
+import { ProjectCards } from './components/ProjectCards.tsx';
 
 const App = () => {
   const [activeSection, setActiveSection] = useState('home');
