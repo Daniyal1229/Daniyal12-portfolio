@@ -211,15 +211,40 @@ const App = () => {
         <Section id="skills" onViewChange={(inView) => inView && setActiveSection('skills')}>
           <SectionTitle>My Skills</SectionTitle>
           <SkillsContainer>
-            <Canvas camera={{ position: [0, 0, 10], fov: 50 }}>
-              <ambientLight intensity={0.5} />
-              <pointLight position={[10, 10, 10]} />
-              <Suspense fallback={<Loader />}>
-                <SkillsSphere />
-                <Environment preset="city" />
-              </Suspense>
-              <OrbitControls enableZoom={false} />
-            </Canvas>
+          <div style={{ width: '600px', height: '600px' }}> {/* Add this wrapper div */}
+    <Canvas 
+      camera={{ 
+        position: [0, 0, 15],  // Increased from 10 to 15 to zoom out slightly
+        fov: 45                // Reduced from 50 to make objects appear larger
+      }}
+      style={{
+        width: '100%',
+        height: '100%',
+        background: 'radial-gradient(circle at center, #1a1a2e 0%, #16213e 100%)',
+        borderRadius: '50%',
+        boxShadow: '0 0 30px rgba(0, 194, 255, 0.1)'
+      }}
+    >
+      <ambientLight intensity={0.5} />
+      <pointLight position={[10, 10, 10]} intensity={1.5} />
+      <pointLight position={[-10, -10, -10]} intensity={1.5} color="#00d2ff" />
+      
+      <Suspense fallback={<Loader />}>
+        <SkillsSphere 
+          scale={1.5}  // Directly scale up the sphere
+          rotationSpeed={0.005}
+          hoverScale={1.2}
+        />
+        <Environment preset="city" />
+      </Suspense>
+      
+      <OrbitControls 
+        enableZoom={false} 
+        autoRotate
+        autoRotateSpeed={1.5}
+      />
+    </Canvas>
+  </div>
             <SkillsList>
               <SkillCategory>
                 <h3>Frontend</h3>
