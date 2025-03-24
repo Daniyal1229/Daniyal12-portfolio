@@ -2,7 +2,7 @@ import { useFrame } from '@react-three/fiber';
 import { useRef } from 'react';
 import * as THREE from 'three';
 
-export function Laptop(props: JSX.IntrinsicElements['group']) {
+export function Laptop (props:any) {
   const group = useRef<THREE.Group>(null);
   
   useFrame((state) => {
