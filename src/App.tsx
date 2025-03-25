@@ -7,7 +7,6 @@ import { FaGithub, FaLinkedin, FaEnvelope, FaPhone } from 'react-icons/fa';
 import styled from 'styled-components';
 
 // 3D Components
-import { Laptop } from './components/Laptop.tsx';
 import { SkillsSphere } from './components/SkillsSphere.tsx';
 import { ProjectCards } from './components/ProjectCards.tsx';
 
@@ -524,18 +523,6 @@ const SectionTitle = styled.h2`
 
   @media (max-width: 480px) {
     font-size: 1.8rem;
-  }
-`;
-
-const HeroCanvas = styled.div`
-  width: 100%;
-  height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  @media (max-width: 768px) {
-    height: 70vh;
   }
 `;
 
