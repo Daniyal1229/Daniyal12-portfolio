@@ -6,9 +6,6 @@ import { useInView } from 'react-intersection-observer';
 import { FaGithub, FaLinkedin, FaEnvelope, FaPhone } from 'react-icons/fa';
 import styled from 'styled-components';
 
-// Sample profile image (replace with your actual image)
-// import profileImage from './assets/profile.jpg';
-
 // 3D Components
 import { Laptop } from './components/Laptop.tsx';
 import { SkillsSphere } from './components/SkillsSphere.tsx';
@@ -57,15 +54,6 @@ const App = () => {
       <MainContent>
         {/* Hero Section */}
         <Section id="home" onViewChange={(inView) => inView && setActiveSection('home')}>
-          <Canvas camera={{ position: [0, 0, 10], fov: 50 }}>
-            <ambientLight intensity={0.5} />
-            <pointLight position={[10, 10, 10]} />
-            <Suspense fallback={<Loader />}>
-              <Laptop />
-              <Environment preset="city" />
-            </Suspense>
-            <OrbitControls enableZoom={false} />
-          </Canvas>
           <HeroContent>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
@@ -107,6 +95,8 @@ const App = () => {
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
             >
+              {/* Placeholder for profile image */}
+              <div className="profile-image-placeholder"></div>
             </motion.div>
             <motion.div
               className="content"
@@ -147,15 +137,17 @@ const App = () => {
         <Section id="projects" onViewChange={(inView) => inView && setActiveSection('projects')}>
           <SectionTitle>My Projects</SectionTitle>
           <ProjectsContainer>
-            <Canvas camera={{ position: [0, 0, 10], fov: 50 }}>
-              <ambientLight intensity={0.5} />
-              <pointLight position={[10, 10, 10]} />
-              <Suspense fallback={<Loader />}>
-                <ProjectCards />
-                <Environment preset="city" />
-              </Suspense>
-              <OrbitControls enableZoom={false} />
-            </Canvas>
+            <ProjectsCanvas>
+              <Canvas camera={{ position: [0, 0, 10], fov: 50 }}>
+                <ambientLight intensity={0.5} />
+                <pointLight position={[10, 10, 10]} />
+                <Suspense fallback={<Loader />}>
+                  <ProjectCards />
+                  <Environment preset="city" />
+                </Suspense>
+                <OrbitControls enableZoom={false} />
+              </Canvas>
+            </ProjectsCanvas>
             <ProjectDetails>
               <ProjectCard className="active">
                 <h3>Chat App</h3>
@@ -211,40 +203,33 @@ const App = () => {
         <Section id="skills" onViewChange={(inView) => inView && setActiveSection('skills')}>
           <SectionTitle>My Skills</SectionTitle>
           <SkillsContainer>
-          <div style={{ width: '600px', height: '600px' }}> {/* Add this wrapper div */}
-    <Canvas 
-      camera={{ 
-        position: [0, 0, 15],  // Increased from 10 to 15 to zoom out slightly
-        fov: 45                // Reduced from 50 to make objects appear larger
-      }}
-      style={{
-        width: '100%',
-        height: '100%',
-        background: 'radial-gradient(circle at center, #1a1a2e 0%, #16213e 100%)',
-        borderRadius: '50%',
-        boxShadow: '0 0 30px rgba(0, 194, 255, 0.1)'
-      }}
-    >
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} intensity={1.5} />
-      <pointLight position={[-10, -10, -10]} intensity={1.5} color="#00d2ff" />
-      
-      <Suspense fallback={<Loader />}>
-        <SkillsSphere 
-          scale={1.5}  // Directly scale up the sphere
-          rotationSpeed={0.005}
-          hoverScale={1.2}
-        />
-        <Environment preset="city" />
-      </Suspense>
-      
-      <OrbitControls 
-        enableZoom={false} 
-        autoRotate
-        autoRotateSpeed={1.5}
-      />
-    </Canvas>
-  </div>
+            <SkillsCanvas>
+              <Canvas 
+                camera={{ 
+                  position: [0, 0, 15],
+                  fov: 45
+                }}
+              >
+                <ambientLight intensity={0.5} />
+                <pointLight position={[10, 10, 10]} intensity={1.5} />
+                <pointLight position={[-10, -10, -10]} intensity={1.5} color="#00d2ff" />
+                
+                <Suspense fallback={<Loader />}>
+                  <SkillsSphere 
+                    scale={1.5}
+                    rotationSpeed={0.005}
+                    hoverScale={1.2}
+                  />
+                  <Environment preset="city" />
+                </Suspense>
+                
+                <OrbitControls 
+                  enableZoom={false} 
+                  autoRotate
+                  autoRotateSpeed={1.5}
+                />
+              </Canvas>
+            </SkillsCanvas>
             <SkillsList>
               <SkillCategory>
                 <h3>Frontend</h3>
@@ -379,6 +364,7 @@ const PortfolioContainer = styled.div`
   min-height: 100vh;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   color: #fff;
+  overflow-x: hidden;
 `;
 
 const Navbar = styled.nav`
@@ -394,12 +380,20 @@ const Navbar = styled.nav`
   backdrop-filter: blur(10px);
   z-index: 1000;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    padding: 1rem 5%;
+  }
 `;
 
 const Logo = styled.div`
   font-size: 1.5rem;
   font-weight: 700;
   color: #e94560;
+
+  @media (max-width: 480px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const Hamburger = styled.div`
@@ -456,6 +450,10 @@ const NavLinks = styled.div`
     transition: transform 0.3s ease-in-out;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
   }
+
+  @media (max-width: 480px) {
+    width: 80%;
+  }
 `;
 
 const NavLink = styled.a`
@@ -482,10 +480,19 @@ const NavLink = styled.a`
       background: #e94560;
     }
   }
+
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+  }
 `;
 
 const MainContent = styled.main`
   padding-top: 80px;
+
+  @media (max-width: 768px) {
+    padding-top: 70px;
+  }
 `;
 
 const SectionTitle = styled.h2`
@@ -508,6 +515,27 @@ const SectionTitle = styled.h2`
     height: 4px;
     background: #e94560;
     border-radius: 2px;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.8rem;
+  }
+`;
+
+const HeroCanvas = styled.div`
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  @media (max-width: 768px) {
+    height: 70vh;
   }
 `;
 
@@ -542,6 +570,7 @@ const HeroContent = styled.div`
     .btn {
       padding: 0.8rem 1.5rem;
       border-radius: 5px;
+      width:50%;
       font-weight: 500;
       text-decoration: none;
       transition: all 0.3s ease;
@@ -567,13 +596,38 @@ const HeroContent = styled.div`
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 992px) {
     left: 5%;
     right: 5%;
     max-width: 100%;
+    text-align: center;
 
     h1 {
       font-size: 2.5rem;
+    }
+
+    .buttons {
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+
+    .buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .btn {
+      width: 100%;
+      text-align: center;
     }
   }
 `;
@@ -590,8 +644,10 @@ const AboutContainer = styled.div`
     flex: 1;
     min-width: 300px;
 
-    img {
+    .profile-image-placeholder {
       width: 100%;
+      height: 400px;
+      background: rgba(233, 69, 96, 0.1);
       border-radius: 10px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     }
@@ -632,6 +688,7 @@ const AboutContainer = styled.div`
   @media (max-width: 992px) {
     flex-direction: column;
     gap: 3rem;
+    padding: 3rem 2rem;
 
     .image-container {
       max-width: 400px;
@@ -639,6 +696,28 @@ const AboutContainer = styled.div`
 
     .info-grid {
       grid-template-columns: 1fr !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 2rem 1rem;
+
+    .content {
+      h2 {
+        font-size: 1.8rem;
+      }
+
+      p {
+        font-size: 0.95rem;
+      }
+    }
+
+    .image-container {
+      min-width: 250px;
+
+      .profile-image-placeholder {
+        height: 300px;
+      }
     }
   }
 `;
@@ -650,6 +729,23 @@ const ProjectsContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 5rem 2rem;
+
+  @media (max-width: 768px) {
+    padding: 3rem 1rem;
+  }
+`;
+
+const ProjectsCanvas = styled.div`
+  width: 100%;
+  height: 400px;
+
+  @media (max-width: 768px) {
+    height: 300px;
+  }
+
+  @media (max-width: 480px) {
+    height: 250px;
+  }
 `;
 
 const ProjectDetails = styled.div`
@@ -657,6 +753,10 @@ const ProjectDetails = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   margin-top: 3rem;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const ProjectCard = styled.div`
@@ -711,6 +811,20 @@ const ProjectCard = styled.div`
       background: #d13354;
     }
   }
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+
+  @media (max-width: 480px) {
+    h3 {
+      font-size: 1.3rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+    }
+  }
 `;
 
 const SkillsContainer = styled.div`
@@ -722,6 +836,35 @@ const SkillsContainer = styled.div`
 
   @media (max-width: 992px) {
     flex-direction: column;
+    padding: 3rem 2rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 2rem 1rem;
+  }
+`;
+
+const SkillsCanvas = styled.div`
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle at center, #1a1a2e 0%, #16213e 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 30px rgba(0, 194, 255, 0.1);
+
+  @media (max-width: 1200px) {
+    width: 500px;
+    height: 500px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 768px) {
+    width: 400px;
+    height: 400px;
+  }
+
+  @media (max-width: 480px) {
+    width: 300px;
+    height: 300px;
   }
 `;
 
@@ -730,6 +873,10 @@ const SkillsList = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const SkillCategory = styled.div`
@@ -757,6 +904,16 @@ const SkillCategory = styled.div`
       }
     }
   }
+
+  @media (max-width: 480px) {
+    h3 {
+      font-size: 1.2rem;
+    }
+
+    li {
+      font-size: 0.95rem;
+    }
+  }
 `;
 
 const ContactContainer = styled.div`
@@ -768,6 +925,12 @@ const ContactContainer = styled.div`
 
   @media (max-width: 992px) {
     flex-direction: column;
+    padding: 3rem 2rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 2rem 1rem;
+    gap: 2rem;
   }
 `;
 
@@ -800,6 +963,23 @@ const ContactItem = styled.div`
       color: #e94560;
     }
   }
+
+  @media (max-width: 480px) {
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    svg {
+      font-size: 1.2rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+    }
+
+    a {
+      font-size: 0.9rem;
+    }
+  }
 `;
 
 const ContactForm = styled.div`
@@ -809,6 +989,27 @@ const ContactForm = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+  }
+
+  button {
+    padding: 1rem;
+    background: #e94560;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease;
+
+    &:hover {
+      background: #d13354;
+    }
+  }
+
+  @media (max-width: 480px) {
+    button {
+      padding: 0.8rem;
+    }
   }
 `;
 
@@ -838,6 +1039,12 @@ const FormGroup = styled.div`
     resize: vertical;
     min-height: 150px;
   }
+
+  @media (max-width: 480px) {
+    input, textarea {
+      padding: 0.8rem;
+    }
+  }
 `;
 
 const Footer = styled.footer`
@@ -849,6 +1056,14 @@ const Footer = styled.footer`
   p {
     color: #ccc;
     margin-bottom: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1.5rem;
+
+    p {
+      font-size: 0.9rem;
+    }
   }
 `;
 
@@ -864,6 +1079,14 @@ const SocialLinks = styled.div`
 
     &:hover {
       color: #e94560;
+    }
+  }
+
+  @media (max-width: 480px) {
+    gap: 1rem;
+
+    a {
+      font-size: 1.2rem;
     }
   }
 `;
