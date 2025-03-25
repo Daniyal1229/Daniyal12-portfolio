@@ -557,7 +557,7 @@ const HeroContent = styled.div`
     .btn {
       padding: 0.8rem 1.5rem;
       border-radius: 5px;
-      width:50%;
+      max-width:40%;
       font-weight: 500;
       text-decoration: none;
       transition: all 0.3s ease;
@@ -625,22 +625,16 @@ const AboutContainer = styled.div`
   gap: 5rem;
   max-width: 1200px;
   margin: 0 auto;
+  margin-top:10px;
   padding: 5rem 2rem;
 
   .image-container {
     flex: 1;
     min-width: 300px;
-
-    .profile-image-placeholder {
-      width: 100%;
-      height: 400px;
-      background: rgba(233, 69, 96, 0.1);
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    }
   }
 
   .content {
+    margin-top: 4rem;
     flex: 1;
 
     h2 {
